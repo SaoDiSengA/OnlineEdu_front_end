@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <h1 v-bind:title="message">{{content}}</h1>
+
+        <h1 :title="message">{{content}}</h1>
+
+        <!-- v-bind:value只能进行单向的数据渲染 -->
+        <input type="text" v-bind:value="searchMap.keyWord">
+        <!-- v-model 可以进行双向的数据绑定  -->
+        <input type="text" v-model="searchMap.keyWord">
+
+        <p>您要查询的是：{{searchMap.keyWord}}</p>
+
+        <button v-on:click="search()">查询</button>
+
+        <button @click="search()">查询</button>
+
+        <form action="save" @submit.prevent="onSubmitForm">
+            <input type="text" id="name" v-model="user.username">
+            <button type="submit">保存</button>
+        </form>
+
+        <input type="checkbox" v-model="ok">同意许可协议
+        <!-- v:if条件指令：还有v-else、v-else-if 切换开销大 -->
+        <h1 v-if="ok">if：Lorem ipsum dolor sit amet.</h1>
+        <h1 v-else>no</h1>
+
+        <!-- v:show 条件指令 初始渲染开销大 -->
+        <h1 v-show="ok">show：Lorem ipsum dolor sit amet.</h1>
+        <h1 v-show="!ok">no</h1>
+
+        <!-- 1、简单的列表渲染 -->
+        <ul>
+            <li v-for="n in 10"> {{ n }} </li>
+        </ul>
+        <ul>
+            <!-- 如果想获取索引，则使用index关键字，注意，圆括号中的index必须放在后面 -->
+            <li v-for="(n, index) in 5">{{ n }} - {{ index }} </li>
+        </ul>
+
+        <!-- 2、遍历数据列表 -->
+        <table border="1">
+            <!-- <tr v-for="item in userList"></tr> -->
+            <tr v-for="(item, index) in userList">
+                <td>{{index}}</td>
+                <td>{{item.id}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.age}}</td>
+            </tr>
+        </table>
+
+
+        <Navbar></Navbar>
+        <Navbar></Navbar>
+
+
+        <h1>Hello App!</h1>
+        <p>
+            <!-- 使用 router-link 组件来导航. -->
+            <!-- 通过传入 `to` 属性指定链接. -->
+            <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+            <router-link to="/">首页</router-link>
+            <router-link to="/student">会员管理</router-link>
+            <router-link to="/teacher">讲师管理</router-link>
+        </p>
+        <!-- 路由出口 -->
+        <!-- 路由匹配到的组件将渲染在这里 -->
+        <router-view></router-view>
+
+    </div>
+
+
+
+    <script src="vue.js"></script>
+    <script src="vue-router.js"></script>
+    <script>
+
+         // 1. 定义（路由）组件。
+        // 可以从其他文件 import 进来
+        const Welcome = { template: '<div>欢迎</div>' }
+        const Student = { template: '<div>student list</div>' }
+        const Teacher = { template: '<div>teacher list</div>' }
+
+        // 2. 定义路由
+        // 每个路由应该映射一个组件。
+        const routes = [
+            { path: '/', redirect: '/welcome' }, //设置默认指向的路径
+            { path: '/welcome', component: Welcome },
+            { path: '/student', component: Student },
+            { path: '/teacher', component: Teacher }
+        ]
+
+        // 3. 创建 router 实例，然后传 `routes` 配置
+        const router = new VueRouter({
+            routes // （缩写）相当于 routes: routes
+        })
+
+        // 4. 创建和挂载根实例。
+        // 从而让整个应用都有路由功能
+        new Vue({
+            el: '#app',
+            router,
+            data: {
+                content: '我是标题',
+                message: '页面加载于 ' + new Date().toLocaleString(),
+                searchMap:{
+                    keyWord: '尚硅谷'
+                },
+                result: {},
+                user: {},
+                ok:false,
+                userList: [
+                    { id: 1, username: 'helen', age: 18 },
+                    { id: 2, username: 'peter', age: 28 },
+                    { id: 3, username: 'andy', age: 38 }
+                ],
+            },
+            methods:{
+                //定义多个方法
+                search(){
+                    console.log('search')
+                },
+                f1(){
+                    console.log('f1')
+                },
+                onSubmitForm(){
+                    console.log('onSubmitForm')
+                    if (this.user.username) {
+                        console.log('提交表单')
+                    } else {
+                        alert('请输入用户名')
+                    }
+                }
+            },
+            components:{
+                'Navbar':{
+                    template:'<ul><li>首页</li><li>学员管理</li></ul>'
+                }
+            },
+            created(){
+                
+                //页面渲染之前执行
+                console.log('created....')
+            },
+            mounted(){
+
+                //页面渲染之后执行
+                console.log('mounted....')
+            }
+        })
+    </script>
+</body>
+
+</html>
