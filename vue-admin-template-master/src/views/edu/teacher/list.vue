@@ -42,6 +42,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :current-page="page"
+      :page-size="limit"
+      :total="total"
+      style="padding: 30px 0; text-align: center;"
+      layout="total, prev, pager, next, jumper"
+      @current-change="getList"
+    />
+
   </div>
 </template>
 
@@ -54,7 +63,7 @@ export default {
         return{
             list:null,//查询之后接口返回集合
             page:1,//当前页
-            limit:10,//每页记录数
+            limit:5,//每页记录数
             teacherQuery:{}, // 条件封装对象
             total:0//总记录数
         }
@@ -63,7 +72,8 @@ export default {
         this.getList()
     },
     methods:{
-        getList(){
+        getList(page = 1){
+            this.page = page
             teacher.getTeacherList(this.page,this.limit,this.teacherQuery)
                 .then(res => {
                     this.list = res.data.rows
