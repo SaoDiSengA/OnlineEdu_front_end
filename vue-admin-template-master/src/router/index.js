@@ -45,15 +45,15 @@ export const constantRouterMap = [
     meta: { title: '讲师管理', icon: 'example' },
     children: [
       {
-        path: 'table',
+        path: 'teacherList',
         name: '讲师列表',
-        component: () => import('@/views/edu/teacher/list'),
+        component: () => import('@/views/edu/teacher/teacherList'),
         meta: { title: '讲师列表', icon: 'table' }
       },
       {
-        path: 'save',
+        path: 'addTeacher',
         name: '添加讲师',
-        component: () => import('@/views/edu/teacher/save'),
+        component: () => import('@/views/edu/teacher/addTeacher'),
         meta: { title: '添加讲师', icon: 'tree' }
       }
     ]
