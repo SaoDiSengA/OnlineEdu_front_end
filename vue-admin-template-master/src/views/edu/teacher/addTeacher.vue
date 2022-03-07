@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    讲师添加
     <el-form label-width="120px">
       <el-form-item label="讲师名称">
         <el-input v-model="teacher.name"/>
@@ -40,6 +39,7 @@ import teacherApi from '@/api/edu/teacher'
 export default {
   data(){
     return{
+      
       teacher:{
         name:'',
         sort:0,
@@ -51,10 +51,49 @@ export default {
       saveBtnDisabled:false //保存按钮是否禁用，多次提交问题
     }
   },
-  created(){},
+  created(){
+    this.init()
+  // if(this.$route.params && this.$route.params.id){
+  //   let id = this.$route.params.id
+  //   this.getTeacherInfo(id)
+  // }
+  // if(this.$route.params.id == ''){
+  //   this.teacher = {}
+  // }    不起作用
+  },
+  watch:{
+    $route(to,from){
+      this.init()
+    }
+  },
   methods:{
+    init(){
+        if(this.$route.params && this.$route.params.id){
+          let id = this.$route.params.id
+          this.getTeacherInfo(id)
+        }else{
+          this.teacher = {}
+        }
+    },
     saveOrUpdate(){
-      this.saveTaecher()
+      //判断是修改还是添加
+      //根据teacher中是否有id
+      if(this.teacher.id){
+        this.editTeacher()
+      }else{
+        this.saveTaecher()
+      }
+    },
+    //修改
+    editTeacher(){
+      teacherApi.editTeacherInfo(this.teacher).then(res => {
+        this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+          //回到列表界面 路由跳转
+          this.$router.push({path:'/teacher/teacherList'})
+      })
     },
     //添加讲师方法
     saveTaecher(){
@@ -67,6 +106,12 @@ export default {
           });
           //回到列表界面 路由跳转
           this.$router.push({path:'/teacher/teacherList'})
+        })
+    },
+    getTeacherInfo(id){
+      teacherApi.getTeacherInfo(id)
+        .then(res => {
+          this.teacher = res.data.teacher
         })
     }
   }
