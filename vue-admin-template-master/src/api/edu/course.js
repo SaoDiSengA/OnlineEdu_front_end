@@ -11,4 +11,11 @@ export default {
             
         })
     },
+    //查询所有讲师
+    getTeacherList(){
+        return request({
+            url:`/eduservice/teacher/findAll`,
+            method: 'get',
+        })
+    },
 }
