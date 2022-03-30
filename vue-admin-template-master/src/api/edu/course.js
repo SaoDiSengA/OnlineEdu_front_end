@@ -18,4 +18,11 @@ export default {
             method: 'get',
         })
     },
+    //根据课程id查课程
+    getCourse(id){
+        return request({
+            url:`/eduservice/course/getCourse/${id}`,
+            method: 'get',
+        })
+    }
 }

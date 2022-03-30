@@ -104,6 +104,7 @@ export default {
         cover: '/static/1.jpg',
         price: 0
       },
+      courseId:'',
       BASE_API: process.env.BASE_API, // 接口API地址
       teacherList:[],
       subjectOneList:[],
@@ -112,11 +113,23 @@ export default {
   },
 
   created() {
+    if(this.$route.params && this.$route.params.id){
+      this.courseId = this.$route.params.id
+      this.showCourseInfo()
+    }
     this.getTeacherList()
     this.getOneSubject()
   },
 
   methods: {
+    //信息回显
+    showCourseInfo(){
+      course.getCourse(this.courseId).then(
+        res => {
+          this.courseInfo = res.data.courseInfoVo
+        }
+      )
+    },
     //上传封面成功的方法
     handleAvatarSuccess(res,file){
       console.log(res)// 上传响应
