@@ -10,6 +10,22 @@
       <el-step title="最终发布"/>
     </el-steps>
 
+    <el-button type="text" @click="dialogChapterFormVisible = true">添加章节</el-button>
+    <el-dialog :visible.sync="dialogChapterFormVisible" title="添加章节">
+      <el-form :model="chapter" label-width="120px">
+          <el-form-item label="章节标题">
+              <el-input v-model="chapter.title"/>
+          </el-form-item>
+          <el-form-item label="章节排序">
+              <el-input-number v-model="chapter.sort" :min="0" controls-position="right"/>
+          </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogChapterFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveOrUpdate">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <ul class="chanpterList">
         <li
             v-for="chapter in chapterVideoList"
@@ -58,7 +74,13 @@ export default {
     return {
       chapterVideoList:[],
       courseId:'',
-      saveBtnDisabled: false // 保存按钮是否禁用
+      saveBtnDisabled: false, // 保存按钮是否禁用
+      dialogChapterFormVisible: false,
+      chapter:{ //封装章节数据
+        title:'',
+        sort: 0,
+        courseId:''
+      }
     }
   },
 
@@ -71,6 +93,22 @@ export default {
   },
 
   methods: {
+    //添加章节
+    saveOrUpdate(){
+      //设置课程id
+      this.courseId = this.$route.params.id
+      chapter.addChapter(this.chapter)
+        .then(res => {
+          this.dialogChapterFormVisible = false
+          this.$message({
+            type: 'success',
+            message: '添加章节成功!'
+          })
+          //刷新页面
+          this.getAllChapterVideo()
+        })
+    },
+
     //根据id查章节小节
     getAllChapterVideo(){
       chapter.getAllChapterVideo(this.courseId).then(
