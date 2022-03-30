@@ -24,5 +24,13 @@ export default {
             url:`/eduservice/course/getCourse/${id}`,
             method: 'get',
         })
-    }
+    },
+    //修改课程信息
+    updateCourseInfo(courseInfo){
+        return request({
+            url:`/eduservice/course/updateCourseInfo`,
+            method: 'post',
+            data:courseInfo //requestbody 以 json传输的时候需要定义
+        })
+    },
 }

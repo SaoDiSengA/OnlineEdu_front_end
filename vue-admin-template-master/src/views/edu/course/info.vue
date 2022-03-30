@@ -117,8 +117,8 @@ export default {
       this.courseId = this.$route.params.id
       this.showCourseInfo()
     }
-    this.getTeacherList()
     this.getOneSubject()
+    this.getTeacherList()
   },
 
   methods: {
@@ -126,7 +126,23 @@ export default {
     showCourseInfo(){
       course.getCourse(this.courseId).then(
         res => {
+          //在courseId有信息，包含一级分类和2级分类的id
           this.courseInfo = res.data.courseInfoVo
+          //查询所有的分类，包含一级二级
+          subjects.getSubjectList()
+            .then(res => {
+              //获取所有一级分类
+              this.subjectOneList = res.data.list
+              //对一级分类列表进行遍历，比较当前一级id和所有一级id是否相同
+              for (let index = 0; index < this.subjectOneList.length; index++) {
+                //获取每个一级分类
+                const oneSubject = this.subjectOneList[index]
+                if(oneSubject.id == this.courseInfo.subjectParentId){
+                  //获取一级中的二级
+                  this.subjectTwoList = oneSubject.children
+                }
+              }
+            })
         }
       )
     },
@@ -173,18 +189,39 @@ export default {
         }
       )
     },
-    saveOrUpdate() {
+
+    addCourseInfo(){
       course.addCourseInfo(this.courseInfo).then(
-          res => {
-              //提示
-              this.$message({
-                  type: 'success',
-                  message: '添加课程信息成功!'
-              })
-              //跳转
-              this.$router.push({ path: '/course/chapter/' + res.data.courseId })
-          }
+        res => {
+          //提示
+          this.$message({
+              type: 'success',
+              message: '添加课程信息成功!'
+          })
+          //跳转
+          this.$router.push({ path: '/course/chapter/' + res.data.courseId })
+        }
       )
+    },
+    updateCourseInfo(){
+      course.updateCourseInfo(this.courseInfo)
+        .then(res => {
+          //提示
+          this.$message({
+              type: 'success',
+              message: '修改课程信息成功!'
+          })
+          //跳转
+          this.$router.push({ path: '/course/chapter/' + this.courseId })
+        })
+    },
+    saveOrUpdate() {
+      //判断是添加还是修改
+      if(!this.courseInfo.id){
+        this.addCourseInfo()
+      }else{
+        this.updateCourseInfo()
+      }
     }
   }
 }
