@@ -70,7 +70,8 @@ export default {
           this.$router.push({ path: '/course/list' })
         }
       )
-    }
+    },
+
   }
 }
 </script>
