@@ -38,9 +38,9 @@
           <el-input-number v-model="video.sort" :min="0" controls-position="right"/>
         </el-form-item>
         <el-form-item label="是否免费">
-          <el-radio-group v-model="video.free">
-            <el-radio :label="true">免费</el-radio>
-            <el-radio :label="false">默认</el-radio>
+          <el-radio-group v-model="video.isFree">
+            <el-radio :label="0">免费</el-radio>
+            <el-radio :label="1">收费</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="上传视频">
@@ -58,7 +58,7 @@
         v-for="chapter in chapterVideoList"
         :key="chapter.id">
         <p>
-          {{chapter.title}}
+          {{ chapter.title }}
           <span class="acts">
             <el-button type="text" @click="openVideo(chapter.id)">添加小节</el-button>
             <el-button type="text" @click="openEditChapter(chapter.id)">编辑</el-button>
@@ -73,14 +73,15 @@
             :key="video.id">
             <p>{{ video.title }}
               <span class="acts">
-                <el-button type="text">编辑</el-button>
-                <el-button type="text">删除</el-button>
+                <el-button type="text" @click="openEditVideo(video.id)">编辑</el-button>
+                <el-button type="text" @click="removeVideo(video.id)">删除</el-button>
               </span>
             </p>
           </li>
         </ul>
       </li>
     </ul>
+
     <el-form label-width="120px">
       <el-form-item>
         <el-button @click="previous">上一步</el-button>
@@ -103,11 +104,11 @@ export default {
       saveBtnDisabled: false, // 保存按钮是否禁用
       dialogChapterFormVisible: false,
       dialogVideoFormVisible: false, //小节弹框
-      video:{
-        title:'',
-        sort:0,
-        free:0,
-        videoSourceId:''
+      video: {
+        title: '',
+        sort: 0,
+        isFree: 0,
+        videoSourceId: ''
       },
       chapter: { // 封装章节数据
         title: '',
@@ -126,8 +127,52 @@ export default {
   },
 
   methods: {
-  //小节操作===========================================================================================
-    openVideo(chapterId){
+    //小节操作===========================================================================================
+    //编辑操作
+    openEditVideo(videoId){
+      this.dialogVideoFormVisible = true
+      video.getVideo(videoId)
+        .then(res => {
+          this.video = res.data.chapter
+        })
+    },
+    updateVideo(){
+      video.updateVideo(this.video)
+        .then(res => {
+          this.dialogVideoFormVisible = false
+          this.$message({
+            type: 'success',
+            message: '修改小节成功!'
+          })
+          // 刷新页面
+          this.getAllChapterVideo()
+          this.video.isFree = ''
+          this.video.sort = 0
+          this.video.videoSourceId = ''
+          this.video.title = ''
+          this.video.id = ''
+        })
+    },
+    //删除小节
+    removeVideo(videoId) {
+      this.$confirm('此操作将删除小节记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        video.deleteVideo(videoId).then(
+          res => {
+            this.$message({
+              type: 'success',
+              message: '删除小节成功!'
+            })
+            // 刷新页面
+            this.getAllChapterVideo()
+          }
+        )
+      })
+    },
+    openVideo(chapterId) {
       //弹窗
       this.dialogVideoFormVisible = true
       //设置章节id
@@ -135,7 +180,7 @@ export default {
     },
 
     //添加小节
-    addVideo(){
+    addVideo() {
       this.video.courseId = this.courseId // 设置课程id
       video.addVideo(this.video).then(
         res => {
@@ -146,17 +191,23 @@ export default {
           })
           // 刷新页面
           this.getAllChapterVideo()
+          this.video.isFree = ''
+          this.video.sort = 0
+          this.video.videoSourceId = ''
+          this.video.title = ''
+          this.video.id = ''
         }
       )
     },
-    saveOrUpdateVideo(){
-      this.addVideo()
+    saveOrUpdateVideo() {
+      if (!this.video.id) {
+        this.addVideo()
+      } else {
+        this.updateVideo()
+      }
     },
 
-
-
-
-  //章节操作===========================================================================================
+    //章节操作===========================================================================================
 
     // 删除章节
     deleteChapter(chapterId) {

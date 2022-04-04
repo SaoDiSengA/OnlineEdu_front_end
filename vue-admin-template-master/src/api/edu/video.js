@@ -16,7 +16,7 @@ export default {
       method: 'get'
     })
   },
-  updateChapter(video) {
+  updateVideo(video) {
     return request({
       url: `/eduservice/video/updateVideo`,
       method: 'post',
