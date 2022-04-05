@@ -132,12 +132,12 @@ export default {
       this.getList()
     },
     removeDataById(id){
-      this.$confirm('此操作将永久删除讲师记录, 是否继续?', '提示', {
+      this.$confirm('此操作将删除课程, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        teacher.deleteTeacherId(id)
+        course.deleteCourse(id)
           .then(res => {
             this.$message({
               type: 'success',

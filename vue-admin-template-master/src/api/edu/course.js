@@ -56,4 +56,12 @@ export default {
     })
   },
 
+  //删除课程
+  deleteCourse(courseId) {
+    return request({
+      url: `/eduservice/course/${courseId}`,
+      method: 'delete',
+    })
+  },
+
 }
