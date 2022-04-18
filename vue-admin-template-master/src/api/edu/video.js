@@ -23,10 +23,17 @@ export default {
       data: video
     })
   },
-  // 删除
+  // 删除小节
   deleteVideo(videoId) {
     return request({
       url: `/eduservice/video/${videoId} `,
+      method: 'delete'
+    })
+  },
+  // 删除视频
+  deleteAlyVod(id) {
+    return request({
+      url: `/eduvod/video/removeAlyVideo/${id} `,
       method: 'delete'
     })
   }
