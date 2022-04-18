@@ -162,6 +162,9 @@ export default {
           })
           //文件列表清空
           this.fileList = []
+          //需要把这两个清空，否则会加入数据库
+          this.video.videoSourceId = ''
+          this.video.videoOriginalName = ''
         })
     },
     //beforeVodRemove点×按钮
