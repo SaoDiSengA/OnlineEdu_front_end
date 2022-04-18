@@ -151,6 +151,23 @@ export default {
 
   methods: {
     //小节操作===========================================================================================
+    //点击确定删除按钮执行的方法
+    handleVodRemove(){
+      //调用删除接口
+      video.deleteAlyVod(this.video.videoSourceId)
+        .then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除视频成功!'
+          })
+          //文件列表清空
+          this.fileList = []
+        })
+    },
+    //beforeVodRemove点×按钮
+    beforeVodRemove(file,fileList){
+      return this.$confirm(`确定删除${file.name}？`)
+    },
     //上传视频成功方法
     handleVodUploadSuccess(response, file, fileList){
       this.video.videoSourceId = response.data.videoId
