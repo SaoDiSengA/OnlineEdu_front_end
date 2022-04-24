@@ -248,6 +248,7 @@ export default {
           this.video.videoSourceId = ''
           this.video.title = ''
           this.video.id = ''
+          this.fileList = []
         }
       )
     },
