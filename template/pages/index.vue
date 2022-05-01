@@ -80,7 +80,7 @@
                   <section class="i-teach-wrap">
                     <div class="i-teach-pic">
                       <a href="/teacher/1" :title="teacher.name">
-                        <img :alt="teacher.name" :src="teacher.avater">
+                        <img :alt="teacher.name" :src="teacher.avatar">
                       </a>
                     </div>
                     <div class="mt10 hLh30 txtOf tac">
