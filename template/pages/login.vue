@@ -43,7 +43,8 @@
 <script>
 import '~/assets/css/sign.css'
 import '~/assets/css/iconfont.css'
-
+import loginApi from '@/api/login'
+import cookie from 'js-cookie'
 export default {
   layout: 'sign',
 
@@ -53,12 +54,39 @@ export default {
         mobile:'',
         password:''
       },
+      //用户信息
       loginInfo:{}
     }
   },
 
   methods: {
-
+    submitLogin(){
+      //调用登录接口，返回的是token字符串
+      loginApi.submitLoginUser(this.user)
+      .then(res => {
+        //获取token字符串放到cookie中去
+        cookie.set('guli_token',res.data.data.token,{ domain:'localhost'}) //三个参数，1cookie的名字，2值，3作用范围
+        loginApi.getLoginUserInfo()
+        .then(res => {
+          //获取返回的用户信息,放到cookie中去
+          this.loginInfo = res.data.data.userInfo
+          console.log(this.loginInfo)
+          cookie.set('guli_ucenter',JSON.stringify(this.loginInfo),{ domain:'localhost'})
+          this.$message({
+            type: 'success',
+            message: "登陆成功"
+          })
+          this.$router.push({path:'/'})
+        })
+      })
+    },
+    checkPhone (rule, value, callback) {
+      //debugger
+      if (!(/^1[34578]\d{9}$/.test(value))) {
+        return callback(new Error('手机号码格式不正确'))
+      }
+      return callback()
+    }
   }
 }
 </script>
