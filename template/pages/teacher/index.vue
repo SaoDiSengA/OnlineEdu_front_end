@@ -193,5 +193,21 @@
   </div>
 </template>
 <script>
-export default {};
+import teacherApi from '@/api/teacher'
+export default {
+  // data () {
+  //   return {
+  //     data:[]
+  //   }
+  // },
+  //异步调用
+  //params相当于之前this.$route.params。id等价params。id
+  asyncData({params,error}){
+    return teacherApi.getTeacherList(1,8)
+    .then(res => {
+      // this.data = res.data.data
+      return {data:res.data.data}//等价上面的代码
+    })
+  }
+};
 </script>
