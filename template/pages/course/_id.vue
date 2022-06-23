@@ -34,7 +34,7 @@
               </span>
             </section>
             <section class="c-attr-mt">
-              <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+              <a @click="createOrder()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
         </aside>
@@ -159,6 +159,7 @@
 
 <script>
 import courseApi from "@/api/course"
+import orderApi from "@/api/order"
 export default {
   asyncData({params,error}){
     //params.id等价this.$route.params.id
@@ -166,9 +167,19 @@ export default {
       .then(res => {
         return {
           courseWebVo:res.data.data.courseWebVo,
-          chapterVideoList:res.data.data.chapterVideoList
+          chapterVideoList:res.data.data.chapterVideoList,
+          courseId:params.id
         } //等价上面的代码
       })
   },
+  methods:{
+    createOrder(){
+      orderApi.createOrder(this.courseId).then(res => {
+        //获取返回订单号
+        //生成订单后，跳转页面
+        this.$router.push({path:'/order/'+res.data.data.orderId})
+      })
+    }
+  }
 };
 </script>
