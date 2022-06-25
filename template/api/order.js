@@ -13,5 +13,19 @@ export default {
       url: `/eduorder/order/getOrderInfo/${orderId}`,
       method: 'get'
     })
-  }
+  },
+  //生成2微码的方法
+  createNativeQRCode(orderNo) {
+    return request({
+      url: `/eduorder/paylog/createNativeQRCode/${orderNo}`,
+      method: 'get'
+    })
+  },
+  //查询订单状态
+  queryPayStatus(orderNo) {
+    return request({
+      url: `/eduorder/paylog/queryPayStatus/${orderNo}`,
+      method: 'get'
+    })
+  },
 }
