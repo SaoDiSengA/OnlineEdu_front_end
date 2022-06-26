@@ -33,7 +33,10 @@
                 <a class="c-fff vam" title="收藏" href="#" >收藏</a>
               </span>
             </section>
-            <section class="c-attr-mt">
+            <section v-if="isBuy || Number(courseWebVo.price) === 0" class="c-attr-mt">
+              <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+            </section>
+            <section v-else class="c-attr-mt">
               <a @click="createOrder()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
@@ -163,16 +166,28 @@ import orderApi from "@/api/order"
 export default {
   asyncData({params,error}){
     //params.id等价this.$route.params.id
-    return courseApi.getCourseInfo(params.id)
-      .then(res => {
-        return {
-          courseWebVo:res.data.data.courseWebVo,
-          chapterVideoList:res.data.data.chapterVideoList,
-          courseId:params.id
-        } //等价上面的代码
-      })
+    return {courseId:params.id}
+  },
+  data(){
+    return{
+      courseWebVo: {},
+      chapterVideoList: [],
+      isBuy: false,
+      courseId:''
+    }
+  },
+  created() { //页面渲染之前调用
+    this.initCourseInfo()
   },
   methods:{
+    //查询课程详情信息
+    initCourseInfo(){
+      courseApi.getCourseInfo(this.courseId).then(res => {
+        this.courseWebVo = res.data.data.courseWebVo,
+        this.chapterVideoList = res.data.data.chapterVideoList,
+        this.isBuy = res.data.data.isBuy
+      })
+    },
     createOrder(){
       orderApi.createOrder(this.courseId).then(res => {
         //获取返回订单号
