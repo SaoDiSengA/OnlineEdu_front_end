@@ -51,21 +51,21 @@ export const asyncRoutes = [
     meta: { title: '讲师管理', icon: 'example' },
     children: [
       {
-        path: 'table',
+        path: 'teacherList',
         name: '讲师列表',
-        component: () => import('@/views/edu/teacher/list'),
+        component: () => import('@/views/edu/teacher/teacherList'),
         meta: { title: '讲师列表', icon: 'table' }
       },
       {
-        path: 'save',
-        name: '添加讲师',  
-        component: () => import('@/views/edu/teacher/save'),
+        path: 'addTeacher',
+        name: '添加讲师',
+        component: () => import('@/views/edu/teacher/addTeacher'),
         meta: { title: '添加讲师', icon: 'tree' }
       },
       {
-        path: 'edit/:id',   
+        path: 'addTeacher/:id',
         name: 'EduTeacherEdit',
-        component: () => import('@/views/edu/teacher/save'),
+        component: () => import('@/views/edu/teacher/addTeacher'),
         meta: { title: '编辑讲师', noCache: true },
         hidden: true
       }
@@ -75,20 +75,20 @@ export const asyncRoutes = [
   {
     path: '/subject',
     component: Layout,
-    redirect: '/subject/list',
+    redirect: '/subject/subjectList',
     name: '课程分类管理',
     meta: { title: '课程分类管理', icon: 'example' },
     children: [
       {
         path: 'list',
         name: '课程分类列表',
-        component: () => import('@/views/edu/subject/list'),
+        component: () => import('@/views/edu/subject/subjectList'),
         meta: { title: '课程分类列表', icon: 'table' }
       },
       {
         path: 'save',
-        name: '添加课程分类',  
-        component: () => import('@/views/edu/subject/save'),
+        name: '添加课程分类',
+        component: () => import('@/views/edu/subject/addSubject'),
         meta: { title: '添加课程分类', icon: 'tree' }
       }
     ]
@@ -109,7 +109,7 @@ export const asyncRoutes = [
       },
       {
         path: 'info',
-        name: '添加课程',  
+        name: '添加课程',
         component: () => import('@/views/edu/course/info'),
         meta: { title: '添加课程', icon: 'tree' }
       },
